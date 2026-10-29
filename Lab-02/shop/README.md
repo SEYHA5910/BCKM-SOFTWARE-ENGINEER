@@ -1,13 +1,21 @@
 to run the project run:
     .\mvnw spring-boot:run
-    http://localhost:8081/h2-console
+
 For testing:
     .\mvnw test
 
-datasource:
+this run in web browser:
+    http://localhost:8081/h2-console
+    datasource:
         url: jdbc:h2:file:./data/shop
         username: shop
         password:
+
+to run in post-man:
+    URL: http://localhost:8081/api/products
+
+
+
 
 
 

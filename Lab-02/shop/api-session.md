@@ -1,7 +1,7 @@
 Record session of http
 ---
 
-**Base URL:** `http://localhost:8081`
+**Base URL:** `http://localhost:8081/api/products`
 
 ---
 
