@@ -25,7 +25,7 @@ public class ShopApplication {
 
     @Bean
     public CommandLineRunner runner(ApplicationContext ctx,
-                                     WelcomeService welcomeService,
+                                     ObjectProvider<WelcomeService> welcomeServiceProvider,
                                      ObjectProvider<ReportBuilder> reportBuilderProvider) {
         return args -> {
             // Count and list Notifier beans
@@ -36,15 +36,19 @@ public class ShopApplication {
 
             log.info("{} beans; notifiers = {}", allBeanNames.length, notifierBeans);
 
-            // Execute service calls
-            welcomeService.welcome("ann", false);
-            welcomeService.welcome("bob", true);
+            // Execute service calls (only when WelcomeService is available)
+            welcomeServiceProvider.ifAvailable(ws -> {
+                ws.welcome("ann", false);
+                ws.welcome("bob", true);
+            });
 
-            // Verify prototype instances
-            ReportBuilder r1 = reportBuilderProvider.getObject();
-            ReportBuilder r2 = reportBuilderProvider.getObject();
-            boolean differ = System.identityHashCode(r1) != System.identityHashCode(r2);
-            log.info("prototype instances differ: {}", differ);
+            // Verify prototype instances (only when ReportBuilder is available)
+            reportBuilderProvider.ifAvailable(rb -> {
+                ReportBuilder r1 = reportBuilderProvider.getObject();
+                ReportBuilder r2 = reportBuilderProvider.getObject();
+                boolean differ = System.identityHashCode(r1) != System.identityHashCode(r2);
+                log.info("prototype instances differ: {}", differ);
+            });
         };
     }
 }

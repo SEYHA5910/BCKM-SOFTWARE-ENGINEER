@@ -1,5 +1,4 @@
-INSERT INTO product(name, price, stock)
-VALUES 
+MERGE INTO product(name, price, stock) KEY(name) VALUES
     ('Laptop', 1000, 10),
     ('Mouse', 25, 50),
     ('Keyboard', 35, 5),

@@ -58,4 +58,22 @@ public class ProductRepository {
                    .param("id", id)
                    .update();
     }
+
+    public int deleteAll() {
+        jdbc.sql("DELETE FROM product").update();
+        jdbc.sql("ALTER TABLE product ALTER COLUMN id RESTART WITH 1").update();
+        return 0;
+    }
+
+    public void insertSeedData() {
+        jdbc.sql("""
+                 MERGE INTO product(name, price, stock) KEY(name) VALUES
+                     ('Laptop', 1000, 10),
+                     ('Mouse', 25, 50),
+                     ('Keyboard', 35, 5),
+                     ('Monitor', 299, 15),
+                     ('Headphones', 45, 4)
+                 """).update();
+    }
+
 }
