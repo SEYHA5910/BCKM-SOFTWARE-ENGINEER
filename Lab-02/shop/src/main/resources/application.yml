@@ -7,7 +7,7 @@ spring:
         password:
     sql:
         init:
-            mode: never
+            mode: always
             continue-on-error: false
     h2:
         console:
