@@ -1,14 +1,9 @@
 package edu.itc.shop.web;
 
-import edu.itc.shop.config.ShopProperties;
-import edu.itc.shop.domain.Product;
-import edu.itc.shop.service.ProductService;
-import edu.itc.shop.web.dto.CreateProduct;
-import edu.itc.shop.domain.Product;
-import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import edu.itc.shop.config.ShopProperties;
+import edu.itc.shop.domain.Product;
+import edu.itc.shop.service.ProductService;
+import edu.itc.shop.web.dto.CreateProduct;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/products")

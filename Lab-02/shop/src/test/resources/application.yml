@@ -6,3 +6,8 @@ spring:
     sql:
         init:
             mode: always
+
+shop:
+    currency: USD
+    tax-rate: 0.10
+    low-stock-threshold: 5

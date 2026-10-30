@@ -3,6 +3,7 @@ package edu.itc.shop.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import jakarta.annotation.PreDestroy;
 
 @Service
 @Primary
+@Profile("!dev")
 public class EmailNotifier implements Notifier {
     private static final Logger log = LoggerFactory.getLogger(EmailNotifier.class);
 

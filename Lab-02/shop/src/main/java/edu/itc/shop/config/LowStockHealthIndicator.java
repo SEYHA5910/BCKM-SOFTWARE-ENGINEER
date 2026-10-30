@@ -1,11 +1,12 @@
 package edu.itc.shop.config;
 
-import edu.itc.shop.domain.Product;
-import edu.itc.shop.repository.ProductRepository;
 import java.util.List;
+
 import org.springframework.boot.health.contributor.Health;
 import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.stereotype.Component;
+
+import edu.itc.shop.repository.ProductRepository;
 
 @Component("lowStock")
 public class LowStockHealthIndicator implements HealthIndicator {

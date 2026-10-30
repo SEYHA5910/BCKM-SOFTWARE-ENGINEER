@@ -1,52 +1,48 @@
-to run the project run:
-    .\mvnw spring-boot:run
+# Lab-02 – Spring Boot Shop
 
-For testing:
-    .\mvnw test
+## Requirements
+- Java 25
+- Docker Desktop (only for the MySQL option)
 
-this run in web browser:
-    http://localhost:8081/h2-console
-    datasource:
-        url: jdbc:h2:file:./data/shop
-        username: shop
-        password:
+All commands are run from the `Lab-02/shop` folder:
 
-to run in post-man:
-    URL: http://localhost:8081/api/products
+```powershell
+cd Lab-02\shop
+```
+
+## 1. Run the tests
+
+```powershell
+.\mvnw test
+```
+Tests use their own in-memory H2 database (`src/test/resources/application.yml`).
+
+## 2. Run the app
+
+ `.\mvnw spring-boot:run` Quick start.
+ `.\mvnw spring-boot:run "-Dspring-boot.run.profiles=dev"` for **dev** | Development: H2 console on, DEBUG logs |
+ `.\mvnw spring-boot:run "-Dspring-boot.run.profiles=prod"` for **prod** | Server mode: H2 console off, INFO logs, DB from env variables |
+
+The app runs on **http://localhost:8081**. Stop it with `Ctrl+C`.
+
+## 3. Open the app
 
 
+| Hello endpoint | http://localhost:8081/hello?name=Ann | 1 |
+| REST API (JSON, Postman) | http://localhost:8081/api/products | 4 |
+| Web UI – product list | http://localhost:8081/products | 5 |
+| Web UI – new product form | http://localhost:8081/products/new | 5 |
+| Health check | http://localhost:8081/actuator/health | 5 |
+| App info | http://localhost:8081/actuator/info | 5 |
+| H2 console (dev only) | http://localhost:8081/h2-console | 3 |
 
+## 4. H2 console login
 
+| Field | Value |
+|---|---|
+| JDBC URL | `jdbc:h2:file:./data/shop` |
+| User Name | `shop` |
+| Password |  |
 
+The database is stored in `data/shop.mv.db` (ignored by Git, so each person has their own).
 
-
-
-
-
-
-
-
-
-
-## Task 3 - JDBC vs JdbcClient
-
-With raw JDBC I have to open/close the Connection, PreparedStatement and
-ResultSet myself, copy every column into the record by hand, and handle the
-checked SQLException. JdbcClient does resource handling, row mapping
-(columns → record fields) and exception translation for me.
-
-### Duplicate product name
-**Where the translation happens:** inside Spring's `JdbcTemplate`, which `JdbcClient`
-uses internally. It catches the vendor-specific, checked `SQLException` and uses an
-`SQLExceptionTranslator` to map the error code to Spring's unchecked
-`DataAccessException` hierarchy (here `DuplicateKeyException`). My code therefore
-doesn't depend on H2-specific classes and doesn't have to catch `SQLException`.
-
-    <!-- .\mvnw  -->
-## Task 4: Packaging and JAR Size
-* **Why is the JAR file so large?** 
-The `spring-boot-maven-plugin` creates a "fat JAR" (or uber-JAR). Instead of just containing our compiled Java classes, it bundles all the third-party library dependencies and embeds a complete Tomcat web server inside the file. This allows the application to run completely standalone on any machine with Java installed, without needing a pre-configured web server.
-## Task 5: Auto-Configuration Condition
-* **Condition Evaluation Report for DataSourceAutoConfiguration:**
-  `DataSourceAutoConfiguration matched:`
-  `- @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType' (OnClassCondition)`
