@@ -1,18 +1,20 @@
 package edu.itc.shop.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import edu.itc.shop.domain.Product;
 import edu.itc.shop.repository.ProductRepository;
-import edu.itc.shop.service.InsufficientStockException;
-import edu.itc.shop.service.ProductNotFoundException;
 
 @Service
 public class ProductService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+
     private final ProductRepository repo;
 
     public ProductService(ProductRepository repo) {
@@ -35,9 +37,10 @@ public class ProductService {
     /* --- write operations --- */
 
     @Transactional
-    public Product create(String name, java.math.BigDecimal price, int stock) {
+    public Product create(String name, BigDecimal price, int stock) {
         Product product = new Product(null, name, price, stock);
         long id = repo.insert(product);
+        log.info("Created product id={} name='{}' price={} stock={}", id, name, price, stock);
         return new Product(id, name, price, stock);
     }
 
@@ -77,17 +80,14 @@ public class ProductService {
 
     @Transactional
     public void restock(long fromId, long toId, int qty) {
-        // 1. verify both products exist
         Product fromProduct = repo.findById(fromId).orElseThrow(() -> new ProductNotFoundException(fromId));
         repo.findById(toId).orElseThrow(() -> new ProductNotFoundException(toId));
 
-        // 2. remove from the source product
         int removed = repo.updateStock(fromId, -qty);
         if (removed == 0) {
             throw new InsufficientStockException(fromId, fromProduct.stock(), qty);
         }
 
-        // 3. add to the target product
         int added = repo.updateStock(toId, qty);
         if (added == 0) {
             throw new ProductNotFoundException(toId);
